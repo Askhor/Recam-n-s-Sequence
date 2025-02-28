@@ -1,6 +1,6 @@
 run: recaman.elf
 	clear
-	./recaman.elf 0 100
+	./recaman.elf 0 10
 
-recaman: recaman.c
+recaman.elf: recaman.c
 	gcc recaman.c -o recaman.elf
