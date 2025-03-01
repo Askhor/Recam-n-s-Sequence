@@ -70,7 +70,7 @@ void print_help() {
 	    "Usage: \trecaman <MODE> <BOUND>\n"
 	    "\trecaman <MODE> <BOUND> <FIND>\n"
 	    "\n"
-	    "This is the recaman tool (v42) for working with the recaman "
+	    "This is the recaman tool (v43) for working with the recaman "
 	    "sequence "
 	    "(https://oeis.org/A005132)\n"
 	    "\n"
@@ -179,7 +179,7 @@ void recaman(int mode, number bound, number find) {
 
 		state.current_term = a;
 		if (a == find) {
-			printf("Found %lld at %lld\n", find, state.n);
+			printf("\tFound %lld at %lld\n", find, state.n);
 			exit(0);
 		}
 	}
@@ -197,7 +197,7 @@ int main(int argc, char **args) {
 
 	if (argc == 4) {
 		find = atoi(args[3]);
-		printf("Looking for %lld\n", find);
+		printf("\tLooking for %lld\n", find);
 	}
 
 	recaman(parse_base2(args[1]), atoi(args[2]), find);
