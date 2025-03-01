@@ -15,7 +15,7 @@ typedef struct {
 } RecamanState;
 
 void *myalloc(number bytes) {
-	void *addr = malloc(bytes);
+	void *addr = calloc(bytes, 1);
 	if (addr != NULL)
 		return addr;
 	printf("Memory error, exiting\n");
@@ -28,9 +28,9 @@ RecamanState createState(number bound) {
 	state.n = 0;
 	state.current_term = 0;
 	state.bitset = myalloc(bound >> 3);
-	for (int i = 0; i < bound >> 3; i++) {
-		state.bitset[i] = 0;
-	}
+	// for (int i = 0; i < (bound >> 3); i++) {
+	//	state.bitset[i] = 0;
+	// }
 	state.bitset[0] = 1;
 	state.extra_state = 0;
 	state.extra_counter = 0;
@@ -67,9 +67,11 @@ void hit_number(RecamanState *state, number num) {
 
 void print_help() {
 	printf(
-	    "Usage: recaman <MODE> <BOUND>\n"
+	    "Usage: \trecaman <MODE> <BOUND>\n"
+	    "\trecaman <MODE> <BOUND> <FIND>\n"
 	    "\n"
-	    "This is the recaman tool for working with the recaman sequence "
+	    "This is the recaman tool (v42) for working with the recaman "
+	    "sequence "
 	    "(https://oeis.org/A005132)\n"
 	    "\n"
 	    "The modes is a bit-string, where the meaning of the bits is:\n"
@@ -149,7 +151,7 @@ void process_change(RecamanState *state, int mode, number next) {
 	}
 }
 
-void recaman(int mode, number bound) {
+void recaman(int mode, number bound, number find) {
 	if (bound & 0b111) {
 		bound = (((bound >> 3) + 1) << 3);
 	}
@@ -176,17 +178,28 @@ void recaman(int mode, number bound) {
 		}
 
 		state.current_term = a;
+		if (a == find) {
+			printf("Found %lld at %lld\n", find, state.n);
+			exit(0);
+		}
 	}
 
 	destroyState(&state);
 }
 
 int main(int argc, char **args) {
-	if (argc != 3) {
+	if (argc != 3 && argc != 4) {
 		print_help();
 		return -1;
 	}
 
-	recaman(parse_base2(args[1]), atoi(args[2]));
+	number find = 0;
+
+	if (argc == 4) {
+		find = atoi(args[3]);
+		printf("Looking for %lld\n", find);
+	}
+
+	recaman(parse_base2(args[1]), atoi(args[2]), find);
 	return 0;
 }
